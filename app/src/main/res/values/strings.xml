@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">CapstionProject</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="forgot">forgot</string>
+    <string name="lname">LastName</string>
+    <string name="fname">FirstName</string>
+    <string name="phone">Phone</string>
+    <string name="password">Password</string>
+    <string name="account">Account</string>
+    <string name="createAccount">Create Account</string>
 </resources>
