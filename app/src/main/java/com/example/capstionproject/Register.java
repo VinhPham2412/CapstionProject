@@ -1,8 +1,5 @@
 package com.example.capstionproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,8 +26,6 @@ import java.util.concurrent.TimeUnit;
 import static android.content.ContentValues.TAG;
 
 public class Register extends AppCompatActivity {
-    private Button btnRegister;
-    private Button btnResend;
     private TextView txtUsername;
     private TextView txtPhone;
     private TextView txtPassword;
@@ -42,30 +37,27 @@ public class Register extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Context context = getApplicationContext();
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                .addOnCompleteListener(this, task -> {
+                    Context context = getApplicationContext();
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success");
 
-                            FirebaseUser user = task.getResult().getUser();
-                            Intent intent = new Intent(Register.this,MainActivity.class);
-                            intent.putExtra("user",user);
-                            startActivity(intent);
-                        } else {
-                            // Sign in failed, display a message and update the UI
-                            Toast toast = Toast.makeText(context,"Something wrong, please login",Toast.LENGTH_SHORT);
-                            toast.show();
-                            Intent intent = new Intent(Register.this,Login.class);
-                            startActivity(intent);
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
-                                Toast toast2 = Toast.makeText(context,"Invalid code",Toast.LENGTH_SHORT);
-                                toast2.show();
-                            }
+                        FirebaseUser user = task.getResult().getUser();
+                        Intent intent = new Intent(Register.this,MainActivity.class);
+                        intent.putExtra("user",user);
+                        startActivity(intent);
+                    } else {
+                        // Sign in failed, display a message and update the UI
+                        Toast toast = Toast.makeText(context,"Something wrong, please login",Toast.LENGTH_SHORT);
+                        toast.show();
+                        Intent intent = new Intent(Register.this,Login.class);
+                        startActivity(intent);
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            // The verification code entered was invalid
+                            Toast toast2 = Toast.makeText(context,"Invalid code",Toast.LENGTH_SHORT);
+                            toast2.show();
                         }
                     }
                 });
@@ -91,13 +83,13 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
-        btnRegister = findViewById(R.id.btnRegister);
+        Button btnRegister = findViewById(R.id.btnRegister);
         txtUsername = findViewById(R.id.txtName);
         txtPhone = findViewById(R.id.txtPhone);
         txtPassword = findViewById(R.id.txtPassword);
         txtConfirm = findViewById(R.id.txtPassword2);
         txtCode = findViewById(R.id.txtCode);
-        btnResend =findViewById(R.id.btnSendCode);
+        Button btnResend = findViewById(R.id.btnSendCode);
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
@@ -127,7 +119,6 @@ public class Register extends AppCompatActivity {
                 // now need to ask the user to enter the code and then construct a credential
                 // by combining the code with a verification ID.
                 Log.d(TAG, "onCodeSent:" + verificationId);
-
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
                 mResendToken = token;
@@ -145,7 +136,7 @@ public class Register extends AppCompatActivity {
                     if(txtCode.getText()!=null && mVerificationId!=null){
                         verifyPhoneNumberWithCode(mVerificationId,txtCode.getText().toString());
                     }else{
-                        Toast toast = Toast.makeText(context,"Vertify fail.",Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(context,"Invalid code.",Toast.LENGTH_SHORT);
                         toast.show();
                     }
 
@@ -155,22 +146,20 @@ public class Register extends AppCompatActivity {
                 }
             }
         });
-        btnResend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phone = txtPhone.getText().toString();
-                if(mResendToken == null){
-                    PhoneAuthOptions options =
-                            PhoneAuthOptions.newBuilder(mAuth)
-                                    .setPhoneNumber(phone)       // Phone number to verify
-                                    .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                                    .setActivity(Register.this)                 // Activity (for callback binding)
-                                    .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                                    .build();
-                    PhoneAuthProvider.verifyPhoneNumber(options);
-                }else{
-                    resendVerificationCode(phone,mResendToken);
-                }
+        btnResend.setOnClickListener(v -> {
+            String phone = txtPhone.getText().toString();
+            phone = phone.replaceFirst("0","+84");
+            if(mResendToken == null){
+                PhoneAuthOptions options =
+                        PhoneAuthOptions.newBuilder(mAuth)
+                                .setPhoneNumber(phone)       // Phone number to verify
+                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                                .setActivity(Register.this)                 // Activity (for callback binding)
+                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                                .build();
+                PhoneAuthProvider.verifyPhoneNumber(options);
+            }else{
+                resendVerificationCode(phone,mResendToken);
             }
         });
     }
