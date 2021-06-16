@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1050891940379",
+    "firebase_url": "https://capstionproject-default-rtdb.firebaseio.com",
+    "project_id": "capstionproject",
+    "storage_bucket": "capstionproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050891940379:android:58c3ca19b40f79cbe0febe",
+        "android_client_info": {
+          "package_name": "com.example.capstionproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1050891940379-30j4ftuped672uu056jio99g3munq9b1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADTQhCyrLJJyeTOZ1hl4bEbe8LcP3d1NQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1050891940379-30j4ftuped672uu056jio99g3munq9b1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
