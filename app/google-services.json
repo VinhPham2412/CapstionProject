@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1050891940379",
+    "firebase_url": "https://capstionproject-default-rtdb.firebaseio.com",
     "project_id": "capstionproject",
     "storage_bucket": "capstionproject.appspot.com"
   },
