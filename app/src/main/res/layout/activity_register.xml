@@ -15,6 +15,36 @@
         android:backgroundTint="@color/colorPrimary">
 
 
+        <Button
+            android:id="@+id/btnSendCode"
+            android:layout_width="64dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="314dp"
+            android:layout_marginTop="568dp"
+            android:background="@drawable/border"
+            android:backgroundTint="@color/colorPrimary"
+            app:icon="@android:drawable/ic_popup_sync"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/txtCode"
+            android:layout_width="269dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="562dp"
+            android:background="@drawable/border"
+            android:drawableStart="@android:drawable/ic_lock_lock"
+            android:drawablePadding="16dp"
+            android:ems="10"
+            android:hint="@string/code"
+            android:inputType="textPersonName"
+            android:padding="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <EditText
             android:id="@+id/txtPhone"
             android:layout_width="match_parent"
@@ -57,7 +87,7 @@
             android:id="@+id/btnRegister"
             android:layout_width="177dp"
             android:layout_height="54dp"
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="156dp"
             android:background="@drawable/border"
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/createAccount"
