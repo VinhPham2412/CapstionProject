@@ -1,5 +1,6 @@
 package com.example.capstionproject;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -8,6 +9,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private Timer timer;
     ViewPager viewPager;
     private List<Photo> photoList;
+    private ActionBar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
         circleIndicator=findViewById(R.id.circleIndicator);
         circleIndicator.setViewPager(viewPager);
         autoSlideImage();
+        toolbar = getSupportActionBar();
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+
+        toolbar.setTitle("Trang chủ");
     }
     private void autoSlideImage(){
         if(timer==null){

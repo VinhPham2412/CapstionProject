@@ -165,12 +165,12 @@ public class Register extends AppCompatActivity {
             }
         });
     }
-    private void checkInput(EditText editText){
+    private boolean checkInput(EditText editText){
         if(editText!=null)
             check=true;
         else
             check=false;
-
+    return check;
     }
 
 }

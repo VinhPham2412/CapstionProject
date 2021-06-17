@@ -12,4 +12,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="red">#ff0039</color>
     <color name="mainColor">#FF03DAC5</color>
+    <color name="bgBottomNavigation">#fe485a</color>
 </resources>
