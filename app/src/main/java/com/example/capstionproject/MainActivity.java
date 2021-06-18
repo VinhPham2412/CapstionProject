@@ -4,13 +4,17 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     private List<Photo> photoList;
     private ActionBar toolbar;
+    private TextView txtUsername;
+    private FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +48,21 @@ public class MainActivity extends AppCompatActivity {
         circleIndicator.setViewPager(viewPager);
         autoSlideImage();
         toolbar = getSupportActionBar();
+        txtUsername = findViewById(R.id.txtUseName);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user==null){
+            Intent intent = new Intent(this,Login.class);
+            startActivity(intent);
+        }else{
+            String welcome = "Welcome ";
+            welcome+= user.getPhoneNumber();
+            txtUsername.setText(welcome);
 
-        toolbar.setTitle("Trang chủ");
+            BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+
+            toolbar.setTitle("Trang chủ");
+        }
     }
     private void autoSlideImage(){
         if(timer==null){

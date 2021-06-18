@@ -27,150 +27,49 @@ import java.util.concurrent.TimeUnit;
 import static android.content.ContentValues.TAG;
 
 public class Register extends AppCompatActivity {
-    private boolean check=true;
-    private TextView txtUsername;
+    private TextView txtFName;
+    private TextView txtLName;
     private TextView txtPhone;
-    private TextView txtPassword;
-    private TextView txtConfirm;
-    private TextView txtCode;
-    FirebaseAuth mAuth;
-    private String mVerificationId;
-    private PhoneAuthProvider.ForceResendingToken mResendToken;
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    Context context = getApplicationContext();
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success");
+    private Authen authen;
 
-                        FirebaseUser user = task.getResult().getUser();
-                        Intent intent = new Intent(Register.this,MainActivity.class);
-                        intent.putExtra("user",user);
-                        startActivity(intent);
-                    } else {
-                        // Sign in failed, display a message and update the UI
-                        Toast toast = Toast.makeText(context,"Something wrong, please login",Toast.LENGTH_SHORT);
-                        toast.show();
-                        Intent intent = new Intent(Register.this,Login.class);
-                        startActivity(intent);
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            // The verification code entered was invalid
-                            Toast toast2 = Toast.makeText(context,"Invalid code",Toast.LENGTH_SHORT);
-                            toast2.show();
-                        }
-                    }
-                });
-    }
-    private void verifyPhoneNumberWithCode(String verificationId, String code) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInWithPhoneAuthCredential(credential);
-    }
-    private void resendVerificationCode(String phoneNumber,
-                                        PhoneAuthProvider.ForceResendingToken token) {
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(phoneNumber)       // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(this)                 // Activity (for callback binding)
-                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                        .setForceResendingToken(token)     // ForceResendingToken from callbacks
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mAuth = FirebaseAuth.getInstance();
+        Context context = getApplicationContext();
+
         Button btnRegister = findViewById(R.id.btnRegister);
-        txtUsername = findViewById(R.id.txtfName);
+        txtFName = findViewById(R.id.txtfName);
+        txtLName = findViewById(R.id.txtlName);
         txtPhone = findViewById(R.id.txtPhone);
-//        txtPassword = findViewById(R.id.txtPassword);
-//        txtConfirm = findViewById(R.id.txtPassword2);
-//        txtCode = findViewById(R.id.txtCode);
-//        Button btnResend = findViewById(R.id.btnSendCode);
-        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        authen = new Authen(this);
 
-            @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
-                signInWithPhoneAuthCredential(credential);
-            }
-
-            @Override
-            public void onVerificationFailed(FirebaseException e) {
-                Context context = getApplicationContext();
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
-                } else if (e instanceof FirebaseTooManyRequestsException) {
-                    // The SMS quota for the project has been exceeded
-                    Toast toast = Toast.makeText(context,"Try again later.",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                // Show a message and update the UI
-                Toast toast = Toast.makeText(context,"Something wrong, please check phone number and try again.",Toast.LENGTH_SHORT);
-                toast.show();
-            }
-
-            @Override
-            public void onCodeSent(@NonNull String verificationId,
-                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
-                Log.d(TAG, "onCodeSent:" + verificationId);
-                // Save verification ID and resending token so we can use them later
-                mVerificationId = verificationId;
-                mResendToken = token;
-
-            }
-        };
         btnRegister.setOnClickListener(new View.OnClickListener() {
+            String FName = txtFName.getText().toString();
+            String LName = txtLName.getText().toString();
+            String phone = txtPhone.getText().toString();
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Register.this,VerifySMSToken.class);
-                startActivity(intent);
+                if(phone==null||phone.isEmpty()||FName==null|| FName.isEmpty()
+                        ||LName==null|| LName.isEmpty()){
+
+                    //get info,send sms and transfer phone to verify
+                    Intent intent = new Intent(context,VerifySMSToken.class);
+                    intent.putExtra("phone",phone);
+                    intent.putExtra("FName",FName);
+                    intent.putExtra("LName",LName);
+
+                    authen.sendVerificationCode(phone,null);
+
+                    startActivity(intent);
+                }else{
+                    Toast toast = Toast.makeText(context,"All field is required."
+                            ,Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
-//        btnRegister.setOnClickListener(new View.OnClickListener() {
-//            String username;
-//            @Override
-//            public void onClick(View v) {
-//                Context context = getApplicationContext();
-//                if(txtPassword.getText().toString().equals(txtConfirm.getText().toString())){
-//                    //get info
-//                    username= txtUsername.getText().toString();
-//                    if(txtCode.getText()!=null && mVerificationId!=null){
-//                        verifyPhoneNumberWithCode(mVerificationId,txtCode.getText().toString());
-//                    }else{
-//                        Toast toast = Toast.makeText(context,"Invalid code.",Toast.LENGTH_SHORT);
-//                        toast.show();
-//                    }
-//
-//                }else{
-//                    Toast toast = Toast.makeText(context,"Confirm must match password",Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//            }
-//        });
-//        btnResend.setOnClickListener(v -> {
-//            String phone = txtPhone.getText().toString();
-//            phone = phone.replaceFirst("0","+84");
-//            if(mResendToken == null){
-//                PhoneAuthOptions options =
-//                        PhoneAuthOptions.newBuilder(mAuth)
-//                                .setPhoneNumber(phone)       // Phone number to verify
-//                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-//                                .setActivity(Register.this)                 // Activity (for callback binding)
-//                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-//                                .build();
-//                PhoneAuthProvider.verifyPhoneNumber(options);
-//            }else{
-//                resendVerificationCode(phone,mResendToken);
-//            }
-//        });
+
     }
 
 }
