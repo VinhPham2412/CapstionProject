@@ -86,12 +86,12 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
         Button btnRegister = findViewById(R.id.btnRegister);
-        txtUsername = findViewById(R.id.txtName);
+        txtUsername = findViewById(R.id.txtfName);
         txtPhone = findViewById(R.id.txtPhone);
-        txtPassword = findViewById(R.id.txtPassword);
-        txtConfirm = findViewById(R.id.txtPassword2);
-        txtCode = findViewById(R.id.txtCode);
-        Button btnResend = findViewById(R.id.btnSendCode);
+//        txtPassword = findViewById(R.id.txtPassword);
+//        txtConfirm = findViewById(R.id.txtPassword2);
+//        txtCode = findViewById(R.id.txtCode);
+//        Button btnResend = findViewById(R.id.btnSendCode);
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
@@ -128,49 +128,49 @@ public class Register extends AppCompatActivity {
             }
         };
         btnRegister.setOnClickListener(new View.OnClickListener() {
-            String username;
             @Override
             public void onClick(View v) {
-                Context context = getApplicationContext();
-                if(txtPassword.getText().toString().equals(txtConfirm.getText().toString())){
-                    //get info
-                    username= txtUsername.getText().toString();
-                    if(txtCode.getText()!=null && mVerificationId!=null){
-                        verifyPhoneNumberWithCode(mVerificationId,txtCode.getText().toString());
-                    }else{
-                        Toast toast = Toast.makeText(context,"Invalid code.",Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-
-                }else{
-                    Toast toast = Toast.makeText(context,"Confirm must match password",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
+                Intent intent=new Intent(Register.this,VerifySMSToken.class);
+                startActivity(intent);
             }
         });
-        btnResend.setOnClickListener(v -> {
-            String phone = txtPhone.getText().toString();
-            phone = phone.replaceFirst("0","+84");
-            if(mResendToken == null){
-                PhoneAuthOptions options =
-                        PhoneAuthOptions.newBuilder(mAuth)
-                                .setPhoneNumber(phone)       // Phone number to verify
-                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                                .setActivity(Register.this)                 // Activity (for callback binding)
-                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
-                                .build();
-                PhoneAuthProvider.verifyPhoneNumber(options);
-            }else{
-                resendVerificationCode(phone,mResendToken);
-            }
-        });
-    }
-    private boolean checkInput(EditText editText){
-        if(editText!=null)
-            check=true;
-        else
-            check=false;
-    return check;
+//        btnRegister.setOnClickListener(new View.OnClickListener() {
+//            String username;
+//            @Override
+//            public void onClick(View v) {
+//                Context context = getApplicationContext();
+//                if(txtPassword.getText().toString().equals(txtConfirm.getText().toString())){
+//                    //get info
+//                    username= txtUsername.getText().toString();
+//                    if(txtCode.getText()!=null && mVerificationId!=null){
+//                        verifyPhoneNumberWithCode(mVerificationId,txtCode.getText().toString());
+//                    }else{
+//                        Toast toast = Toast.makeText(context,"Invalid code.",Toast.LENGTH_SHORT);
+//                        toast.show();
+//                    }
+//
+//                }else{
+//                    Toast toast = Toast.makeText(context,"Confirm must match password",Toast.LENGTH_SHORT);
+//                    toast.show();
+//                }
+//            }
+//        });
+//        btnResend.setOnClickListener(v -> {
+//            String phone = txtPhone.getText().toString();
+//            phone = phone.replaceFirst("0","+84");
+//            if(mResendToken == null){
+//                PhoneAuthOptions options =
+//                        PhoneAuthOptions.newBuilder(mAuth)
+//                                .setPhoneNumber(phone)       // Phone number to verify
+//                                .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+//                                .setActivity(Register.this)                 // Activity (for callback binding)
+//                                .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+//                                .build();
+//                PhoneAuthProvider.verifyPhoneNumber(options);
+//            }else{
+//                resendVerificationCode(phone,mResendToken);
+//            }
+//        });
     }
 
 }
