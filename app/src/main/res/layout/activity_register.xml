@@ -16,7 +16,7 @@
 
 
         <EditText
-            android:id="@+id/txtPhone"
+            android:id="@+id/txtPhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:layout_marginStart="40dp"
@@ -32,7 +32,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtlName" />
+            app:layout_constraintTop_toBottomOf="@+id/txtLastName" />
 
         <Button
             android:id="@+id/btnRegister"
@@ -44,10 +44,10 @@
             android:text="@string/createAccount"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtPhone" />
+            app:layout_constraintTop_toBottomOf="@+id/txtPhoneNumber" />
 
         <EditText
-            android:id="@+id/txtfName"
+            android:id="@+id/txtFirstName"
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:layout_marginStart="40dp"
@@ -66,7 +66,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/txtlName"
+            android:id="@+id/txtLastName"
             android:layout_width="match_parent"
             android:layout_height="57dp"
             android:layout_marginStart="40dp"
@@ -82,7 +82,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtfName" />
+            app:layout_constraintTop_toBottomOf="@+id/txtFirstName" />
 
         <View
             android:id="@+id/view3"

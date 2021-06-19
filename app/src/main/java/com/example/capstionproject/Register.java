@@ -7,29 +7,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.FirebaseException;
-import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
-
-import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
 
 public class Register extends AppCompatActivity {
-    private TextView txtFName;
-    private TextView txtLName;
-    private TextView txtPhone;
+    private EditText txtFName;
+    private EditText txtLName;
+    private EditText txtPhone;
+    private Button btnRegister;
     private Authen authen;
 
     @Override
@@ -38,10 +26,10 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         Context context = getApplicationContext();
 
-        Button btnRegister = findViewById(R.id.btnRegister);
-        txtFName = findViewById(R.id.txtfName);
-        txtLName = findViewById(R.id.txtlName);
-        txtPhone = findViewById(R.id.txtPhone);
+        btnRegister = (Button) findViewById(R.id.btnRegister);
+        txtFName = (EditText) findViewById(R.id.txtFirstName);
+        txtLName = (EditText)findViewById(R.id.txtLastName);
+        txtPhone = (EditText)findViewById(R.id.txtPhoneNumber);
         authen = new Authen(this);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -50,22 +38,21 @@ public class Register extends AppCompatActivity {
             String phone = txtPhone.getText().toString();
             @Override
             public void onClick(View v) {
-                if(phone==null||phone.isEmpty()||FName==null|| FName.isEmpty()
-                        ||LName==null|| LName.isEmpty()){
-
+                if(phone==null||phone.isEmpty()){
+                    Toast toast = Toast.makeText(context,"All field is required."
+                            ,Toast.LENGTH_SHORT);
+                    toast.show();
+                }else{
                     //get info,send sms and transfer phone to verify
                     Intent intent = new Intent(context,VerifySMSToken.class);
+                    phone = phone.replaceFirst("0","+84");
                     intent.putExtra("phone",phone);
                     intent.putExtra("FName",FName);
                     intent.putExtra("LName",LName);
 
                     authen.sendVerificationCode(phone,null);
-
+                    Log.d(TAG, "onCodeSent:" + phone);
                     startActivity(intent);
-                }else{
-                    Toast toast = Toast.makeText(context,"All field is required."
-                            ,Toast.LENGTH_SHORT);
-                    toast.show();
                 }
             }
         });

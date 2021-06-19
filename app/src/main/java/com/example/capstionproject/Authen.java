@@ -29,57 +29,6 @@ public class Authen extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private Context context;
-    public void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(caller, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success");
-
-                        FirebaseUser user = task.getResult().getUser();
-                        Intent intent = new Intent(context,MainActivity.class);
-                        intent.putExtra("user",user);
-                        startActivity(intent);
-                    } else {
-                        // Sign in failed, display a message and update the UI
-                        Toast toast = Toast.makeText(context,"Something wrong...",Toast.LENGTH_SHORT);
-                        toast.show();
-                        Intent intent = new Intent(context,caller.getClass());
-                        startActivity(intent);
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            // The verification code entered was invalid
-                            Toast toast2 = Toast.makeText(context,"Invalid code, please try again.",Toast.LENGTH_SHORT);
-                            toast2.show();
-                        }
-                    }
-                });
-    }
-    public void verifyPhoneNumberWithCode(String verificationId, String code) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInWithPhoneAuthCredential(credential);
-    }
-    public void sendVerificationCode(String phoneNumber,
-                                        PhoneAuthProvider.ForceResendingToken token) {
-        PhoneAuthOptions options;
-        if(token==null){
-            options = PhoneAuthOptions.newBuilder(mAuth)
-                    .setPhoneNumber(phoneNumber)
-                    .setTimeout(60L, TimeUnit.SECONDS)
-                    .setActivity(caller)
-                    .setCallbacks(mCallbacks)
-                    .build();
-        } else {
-            options = PhoneAuthOptions.newBuilder(mAuth)
-                    .setPhoneNumber(phoneNumber)
-                    .setTimeout(60L, TimeUnit.SECONDS)
-                    .setActivity(caller)
-                    .setCallbacks(mCallbacks)
-                    .setForceResendingToken(token)
-                    .build();
-        }
-        PhoneAuthProvider.verifyPhoneNumber(options);
-    }
     public Authen (Activity caller){
         this.caller = caller;
         mAuth = FirebaseAuth.getInstance();
@@ -122,7 +71,57 @@ public class Authen extends AppCompatActivity {
             }
         };
     }
+    public void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(caller, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success");
 
+                        FirebaseUser user = task.getResult().getUser();
+                        Intent intent = new Intent(context,MainActivity.class);
+                        intent.putExtra("user",user);
+                        startActivity(intent);
+                    } else {
+                        // Sign in failed, display a message and update the UI
+                        Toast toast = Toast.makeText(context,"Something wrong...",Toast.LENGTH_SHORT);
+                        toast.show();
+                        Intent intent = new Intent(context,caller.getClass());
+                        startActivity(intent);
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            // The verification code entered was invalid
+                            Toast toast2 = Toast.makeText(context,"Invalid code, please try again.",Toast.LENGTH_SHORT);
+                            toast2.show();
+                        }
+                    }
+                });
+    }
+    public void verifyPhoneNumberWithCode(String verificationId, String code) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        signInWithPhoneAuthCredential(credential);
+    }
+    public void sendVerificationCode(String phoneNumber,
+                                     PhoneAuthProvider.ForceResendingToken token) {
+        PhoneAuthOptions options;
+        if(token==null){
+            options = PhoneAuthOptions.newBuilder(mAuth)
+                    .setPhoneNumber(phoneNumber)
+                    .setTimeout(60L, TimeUnit.SECONDS)
+                    .setActivity(caller)
+                    .setCallbacks(mCallbacks)
+                    .build();
+        } else {
+            options = PhoneAuthOptions.newBuilder(mAuth)
+                    .setPhoneNumber(phoneNumber)
+                    .setTimeout(60L, TimeUnit.SECONDS)
+                    .setActivity(caller)
+                    .setCallbacks(mCallbacks)
+                    .setForceResendingToken(token)
+                    .build();
+        }
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
     public PhoneAuthProvider.ForceResendingToken getmResendToken() {
         return mResendToken;
     }
