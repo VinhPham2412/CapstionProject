@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -42,11 +43,20 @@ public class VerifySMSToken extends AppCompatActivity {
         String LName = getIntent().getStringExtra("LName");
 
         txtResend.setOnClickListener(v -> {
-            phone = phone.replaceFirst("0","+84");
             auth.sendVerificationCode(phone,auth.getmResendToken());
         });
 
         btnVerify.setOnClickListener(v -> {
+            if(num1.getText().toString().trim().isEmpty()
+            ||num2.getText().toString().trim().isEmpty()
+                    ||num3.getText().toString().trim().isEmpty()
+                    ||num4.getText().toString().trim().isEmpty()
+                    ||num5.getText().toString().trim().isEmpty()
+                    ||num6.getText().toString().trim().isEmpty()) {
+                Toast.makeText(VerifySMSToken.this, "Please enter valid code", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String code = num1.getText().toString();
             code += num2.getText().toString();
             code += num3.getText().toString();
