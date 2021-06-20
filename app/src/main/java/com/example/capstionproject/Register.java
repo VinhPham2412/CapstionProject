@@ -3,10 +3,12 @@ package com.example.capstionproject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,8 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
@@ -30,61 +34,76 @@ public class Register extends AppCompatActivity {
     private TextView txtFName;
     private TextView txtLName;
     private TextView txtPhone;
-    private Authen authen;
+    private FirebaseAuth mAuth;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private String lName,fName,phone;
+    private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        Context context = getApplicationContext();
 
         Button btnRegister = findViewById(R.id.btnRegister);
         txtFName = findViewById(R.id.txtfName);
         txtLName = findViewById(R.id.txtlName);
         txtPhone = findViewById(R.id.txtPhone);
-        authen = new Authen(this);
+        progressBar = findViewById(R.id.progressBar2);
+        mAuth = FirebaseAuth.getInstance();
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-//        btnRegister.setOnClickListener(new View.OnClickListener() {
-//            String FName = txtFName.getText().toString();
-//            String LName = txtLName.getText().toString();
-//            String phone = txtPhone.getText().toString().replaceFirst("0","+84");
-//            @Override
-//            public void onClick(View v) {
-//                if(phone!=null||!phone.isEmpty()||FName!=null|| !FName.isEmpty()
-//                        ||LName!=null|| !LName.isEmpty()){
-//
-//                    //get info,send sms and transfer phone to verify
-//                    Intent intent = new Intent(context,VerifySMSToken.class);
-//                    intent.putExtra("phone",phone);
-//                    intent.putExtra("FName",FName);
-//                    intent.putExtra("LName",LName);
-//
-////
-//
-//                    startActivity(intent);
-//                }else{
-//                    Toast toast = Toast.makeText(context,"All field is required."
-//                            ,Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//            }
-//        });
+            @Override
+            public void onCodeSent(@NonNull String verificationId,
+                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
+
+                Log.d(TAG, "onCodeSent:" + verificationId);
+
+                // Save verification ID
+                Intent intent = new Intent(Register.this, VerifySMSToken.class);
+
+                intent.putExtra("phone", phone);
+                intent.putExtra("FName", fName);
+                intent.putExtra("LName", lName);
+                intent.putExtra("verificationId",verificationId);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onVerificationCompleted(@NonNull @NotNull PhoneAuthCredential phoneAuthCredential) {
+                btnRegister.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onVerificationFailed(@NonNull @NotNull FirebaseException e) {
+                btnRegister.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+        };
+
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String fName = txtFName.getText().toString();
-                String lName = txtLName.getText().toString();
-                String phone = txtPhone.getText().toString().replaceFirst("0","+84");
+                btnRegister.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                fName = txtFName.getText().toString();
+                lName = txtLName.getText().toString();
+                phone = txtPhone.getText().toString();
                 if (checkInput(fName) && checkInput(lName) && checkInput(phone)) {
-                    Intent intent = new Intent(Register.this, VerifySMSToken.class);
-                    intent.putExtra("phone", phone);
-                    intent.putExtra("FName", fName);
-                    intent.putExtra("LName", lName);
-                    authen.sendVerificationCode(phone, null);
-                    startActivity(intent);
+                    //send code
+                    phone = txtPhone.getText().toString().replaceFirst("0","+84");
+                    //send OTP
+                    PhoneAuthOptions options =
+                            PhoneAuthOptions.newBuilder(mAuth)
+                                    .setPhoneNumber(phone)       // Phone number to verify
+                                    .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                                    .setActivity(Register.this)                 // Activity (for callback binding)
+                                    .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                                    .build();
+                    PhoneAuthProvider.verifyPhoneNumber(options);
                 }else
-                     Toast.makeText(context,"All field is required."
+                     Toast.makeText(getApplicationContext(),"All field is required."
                            ,Toast.LENGTH_SHORT).show();
             }
         });

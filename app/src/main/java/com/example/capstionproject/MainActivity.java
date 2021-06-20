@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }else{
             String welcome = "Welcome ";
-            welcome+= user.getPhoneNumber();
+            welcome+= user.getDisplayName();
             txtUsername.setText(welcome);
 
             BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
