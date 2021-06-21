@@ -34,16 +34,16 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        btnRegister=findViewById(R.id.btnLogin2);
+//        btnRegister=findViewById(R.id.btnLogin2);
         phone = findViewById(R.id.txtLoginAccount);
         final ProgressBar progressBar=findViewById(R.id.progressBar);
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this,Register.class);
-                startActivity(intent);
-            }
-        });
+//        btnRegister.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Login.this,Register.class);
+//                startActivity(intent);
+//            }
+//        });
         mAuth = FirebaseAuth.getInstance();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 

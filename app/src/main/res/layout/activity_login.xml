@@ -93,8 +93,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="408dp"
-        android:layout_height="245dp"
+        android:layout_width="397dp"
+        android:layout_height="167dp"
         android:layout_marginTop="38dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -104,6 +104,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
             <Button
                 android:id="@+id/btnLogin"
@@ -116,9 +117,7 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:text="Login"
                 android:textColor="@color/cardview_light_background"
-                android:textStyle="bold"
-/>
-
+                android:textStyle="bold" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -129,29 +128,6 @@
 
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="27dp"
-            android:gravity="center"
-            android:text="Or"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginTop="15dp"/>
-
-        <Button
-            android:id="@+id/btnLogin2"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="50dp"
-            android:background="@drawable/border"
-            android:backgroundTint="@color/colorPrimary"
-            android:text="Register"
-            android:textColor="@color/cardview_light_background"
-            android:textStyle="bold" />
     </LinearLayout>
 
 
