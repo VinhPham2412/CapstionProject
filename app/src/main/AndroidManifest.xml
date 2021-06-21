@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstionProject">
-        <activity android:name=".AccountActivity"></activity>
+        <activity android:name=".UpdateProfile"></activity>
+        <activity android:name=".AccountActivity" />
         <activity android:name=".VerifySMSToken" />
         <activity android:name=".Register" />
         <activity android:name=".MainActivity">
@@ -21,8 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login">
-        </activity>
+        <activity android:name=".Login"></activity>
     </application>
 
 </manifest>

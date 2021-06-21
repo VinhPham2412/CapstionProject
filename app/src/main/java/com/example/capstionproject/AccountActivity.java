@@ -11,24 +11,27 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class AccountActivity extends AppCompatActivity {
-    private TextView txtLogout,txtPhone;
+    private TextView txtLogout,txtPhone,txtChange;
     private BottomNavigationView mNavigationView;
+    FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-        txtLogout=findViewById(R.id.fragment_login);
-        txtLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(AccountActivity.this,Login.class));
-            }
+        txtLogout=findViewById(R.id.txtLogout);
+        txtChange = findViewById(R.id.txtChangeInfo);
+        txtLogout.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(AccountActivity.this,Login.class));
         });
+        user = FirebaseAuth.getInstance().getCurrentUser();
         txtPhone=findViewById(R.id.fragment_phoneAccount);
-        txtPhone.setText(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+        if(user!=null){
+            txtPhone.setText(user.getPhoneNumber());
+        }
         mNavigationView=findViewById(R.id.navigation);
         mNavigationView.setSelectedItemId(R.id.navigation_account);
         mNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -50,6 +53,12 @@ public class AccountActivity extends AppCompatActivity {
                 }
                 return false;
             }
+        });
+        txtChange.setOnClickListener(v -> {
+            Intent intent = new Intent(AccountActivity.this,UpdateProfile.class);
+            intent.putExtra("user",user);
+
+            startActivity(intent);
         });
     }
 }
